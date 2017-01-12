@@ -4,13 +4,16 @@ const passportLocal = require('passport-local');
 
 module.exports = {
   getAuthFb: passport.authenticate('facebook'),
-  getAuthFbCb: passport.authenticate('facebook'), //unfinished
+  getAuthFbCb: passport.authenticate('facebook'), 
+  getAuthFbCb2: (req, res) => {
+    res.status(200).send(req.user)
+  }, //unfinished
   getMe: (req, res, next) => {
     console.log('get me endpoint fired');
-    if(req.user){
+    if (req.user) {
       console.log(req.user);
       res.status(200).send(req.user);
-    } else{
+    } else {
       console.log('No user!');
       res.status(500)
     }

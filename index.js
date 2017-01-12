@@ -30,7 +30,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.static('./dist'));
+// app.use(express.static('./dist'));
 
 const massiveInstance = massive.connectSync({connectionString: config.connectionString});
 app.set('db', massiveInstance);
@@ -42,20 +42,20 @@ passport.use(new passportFacebook({
   callbackURL: config.callbackURL,
   profileFields: ['id', 'displayName']
 }, (accessToken, refreshToken, profile, done) => {
-  db.getUserByFacebookId([profile.id],
-  function(err, user) {
-    user = user[0];
-    if (!user) {
-      console.log('creating user');
-      db.createUserFacebook([
-        profile.displayName, profile.id
-      ], function(err, user) {
-        return done(err, user, {scope: 'all'});
-      })
-    } else {
-      return done(err, user);
-    }
-  })
+  // db.getUserByFacebookId([profile.id], function(err, user) {
+  //   user = user[0];
+  //   if (!user) {
+  //     console.log('creating user');
+  //     db.createUserFacebook([
+  //       profile.displayName, profile.id
+  //     ], function(err, user) {
+  //       return done(err, user, {scope: 'all'});
+  //     })
+  //   } else {
+  //     return done(err, user);
+  //   }
+  // })
+  done(null, profile);
 }));
 
 passport.serializeUser(function(user, done) {
@@ -78,7 +78,7 @@ passport.use('local', new passportLocal((username, password, done) => {
 ));
 
 app.get('/auth/facebook', fbCtrl.getAuthFb);
-app.get('/auth/facebook/callback', fbCtrl.getAuthFbCb);
+app.get('/auth/facebook/callback', fbCtrl.getAuthFbCb, fbCtrl.getAuthFbCb2);
 app.get('/auth/me', fbCtrl.getMe);
 
 app.post('auth/local', passport.authenticate('local'), (req, res) =>{
