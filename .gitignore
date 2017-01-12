@@ -1,0 +1,5 @@
+config.js
+config.json
+dist/
+node_modules/
+notes.md
